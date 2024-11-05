@@ -9,6 +9,11 @@
        /etc/nixos/hardware-configuration.nix
     ];
 
+  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
+  hardware.opengl.enable = true;
+  hardware.opengl.extraPackages = [
+  ];
+
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -34,6 +39,7 @@
     settings = {
       auto-optimise-store = true;
       allowed-users = [ "@wheel" ];
+      trusted-users = [ "root" "athas" ];
     };
   };
 
@@ -57,6 +63,7 @@
 
     xserver = {
       enable = false;
+      videoDrivers = [ "nvidia" ];
     };
 
     openssh = {
@@ -88,20 +95,22 @@
 
   environment = {
     systemPackages = with pkgs; [
-      neovim
+      neovim emacs
       git
       htop
-      (python3.withPackages (pypkgs: with pypkgs; [
-        pyyaml
-	pip
-	requests
-      ]))
+      gcc
+      clang
+      curl
+      wget
+      ed
+      file
+      stow
+      python3
+      tree
       tmux
       toilet
       mosml
-      emacs
-      ed
-      stow
+      cudatoolkit
     ];
 
     variables = {
