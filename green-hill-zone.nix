@@ -3,16 +3,22 @@
 
 { config, pkgs, ... }:
 
+let universalPackages = (import ./universal-packages.nix { pkgs = pkgs; });
+in
 {
   imports =
-    [ 
-       /etc/nixos/hardware-configuration.nix
+    [
+      /etc/nixos/hardware-configuration.nix
     ];
 
   hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
   hardware.opengl.enable = true;
   hardware.opengl.extraPackages = [
   ];
+  environment.sessionVariables = {
+    LD_LIBRARY_PATH = "/run/opengl-driver/lib";
+    CUDA_PATH = "${pkgs.cudaPackages.cuda_cudart}";
+  };
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -94,24 +100,11 @@
   };
 
   environment = {
-    systemPackages = with pkgs; [
-      neovim emacs
-      git
-      htop
-      gcc
-      clang
-      curl
-      wget
-      ed
-      file
-      stow
-      python3
-      tree
-      tmux
-      toilet
-      mosml
-      cudatoolkit
-    ];
+    systemPackages =
+      universalPackages ++
+      (with pkgs; [
+        cudatoolkit
+      ]);
 
     variables = {
       EDITOR = "ed";
