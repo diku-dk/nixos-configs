@@ -3,6 +3,16 @@
 let us = import ./users.nix;
 in
 {
+  imports =
+    [
+      <nixos-hardware/raspberry-pi/4>
+      /etc/nixos/hardware-configuration.nix
+    ];
+
+  boot.loader.grub.enable = false;
+  boot.loader.generic-extlinux-compatible.enable = true;
+
+
   users = {
     defaultUserShell = pkgs.zsh;
     users = us //  { autossh = {
@@ -43,6 +53,7 @@ in
     sudo.wheelNeedsPassword = false;
   };
 
+/*
   boot = {
     kernelPackages = pkgs.linuxPackages_rpi4;
     tmpOnTmpfs = true;
@@ -63,6 +74,7 @@ in
       generic-extlinux-compatible.enable = true;
     };
   };
+*/
 
   fileSystems = {
     "/" = {
