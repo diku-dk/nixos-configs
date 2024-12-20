@@ -78,7 +78,7 @@ in
 
   networking = {
     hostName = "pltc-pi";
-    extraHosts = "45.76.37.241 abc\n107.189.30.63 nixvps\n";
+    extraHosts = "107.189.30.63 nixvps\n";
   };
 
   time.timeZone = "Europe/Copenhagen";
@@ -93,7 +93,6 @@ in
     xserver = {
       enable = true;
       displayManager = {
-        startx.enable = true;
         defaultSession = "infoscreen";
         session = [
           { manage = "desktop";
@@ -108,6 +107,9 @@ in
         lightdm = {
           enable = true;
         };
+	#setupCommands = ''
+	#  xset -dpms; xset s off; xset s noblank
+	#'';
       };
     };
 
@@ -125,11 +127,6 @@ in
 
     autossh = {
       sessions = [
-        { extraArguments = "-N -R 9724:localhost:22 autossh@abc";
-          monitoringPort = 0;
-          name = "pltc-pi";
-          user = "autossh";
-        }
         { extraArguments = "-N -R 9725:localhost:22 autossh@nixvps";
           monitoringPort = 0;
           name = "pltc-pi-nixvps";
@@ -152,14 +149,7 @@ in
       git
       python3
       (haskellPackages.callPackage ./add-everyone/default.nix {})
-      matchbox
-      xdotool
-      tmux
-      toilet
-      lxterminal
-      surf
-      feh
-      youtube-dl
+      termite.terminfo
     ];
 
     shellAliases = { vim = "nvim"; };
