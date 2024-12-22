@@ -119,7 +119,7 @@ in
       };
       due = {
         isNormalUser = true;
-        extraGroups = [ "wheel" "docker" ];
+        extraGroups = [ ];
         openssh.authorizedKeys.keys = [
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIChgJ9GX4xgVh5dJ2aJDtCcHrASwSrqJP1aGaPx+27f6 williamhenrichdue@gmail.com"
         ];
