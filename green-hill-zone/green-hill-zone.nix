@@ -1,19 +1,41 @@
-# Configuration for a machine in the PLTC
-# server room lab.
+# Configuration for a machine in the PLTC server room lab.
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, modulesPath, ... }:
 
-let universalPackages = (import ./universal-packages.nix { pkgs = pkgs; });
+let universalPackages = (import ./../universal-packages.nix { pkgs = pkgs; });
 in
 {
   imports =
-    [
-      /etc/nixos/hardware-configuration.nix
+    [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
+  boot.initrd.availableKernelModules = [ "ahci" "xhci_pci" "nvme" "usb_storage" "usbhid" "sd_mod" "rtsx_usb_sdmmc" ];
+  boot.initrd.kernelModules = [ ];
+  boot.kernelModules = [ "kvm-intel" ];
+  boot.extraModulePackages = [ ];
+
+  fileSystems."/" =
+    { device = "/dev/disk/by-uuid/ed5a06b2-7c2e-4cb0-b214-db092163286e";
+      fsType = "ext4";
+    };
+
+  fileSystems."/boot" =
+    { device = "/dev/disk/by-uuid/628E-C2C6";
+      fsType = "vfat";
+      options = [ "fmask=0077" "dmask=0077" ];
+    };
+
+  swapDevices = [ ];
+
+  networking.useDHCP = lib.mkDefault true;
+
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+
   hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
-  hardware.opengl.enable = true;
-  hardware.opengl.extraPackages = [
+  hardware.nvidia.open = false;
+  hardware.graphics.enable = true;
+  hardware.graphics.extraPackages = [
   ];
   environment.sessionVariables = {
     LD_LIBRARY_PATH = "/run/opengl-driver/lib";
@@ -61,7 +83,7 @@ in
       sessions = [
         { extraArguments = "-N -R 9743:localhost:22 autossh@sigkill.dk";
           monitoringPort = 0;
-          name = "infoscreen";
+          name = "backdoor";
           user = "autossh";
         }
       ];
