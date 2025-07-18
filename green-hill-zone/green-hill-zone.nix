@@ -67,7 +67,7 @@ in
     settings = {
       auto-optimise-store = true;
       allowed-users = [ "@wheel" ];
-      trusted-users = [ "root" "athas" ];
+      trusted-users = [ "root" "athas" "erk" ];
     };
   };
 
