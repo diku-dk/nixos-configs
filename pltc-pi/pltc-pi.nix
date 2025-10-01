@@ -124,7 +124,7 @@ in
       sessions = [
         { extraArguments = "-N -R 9725:localhost:22 autossh@sigkill.dk";
           monitoringPort = 0;
-          name = "pltc-pi";
+          name = "autossh-pltc-pi";
           user = "autossh";
         }
       ];
