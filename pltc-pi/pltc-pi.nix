@@ -3,16 +3,6 @@
 let us = import ./users.nix;
 in
 {
-  imports =
-    [
-      <nixos-hardware/raspberry-pi/4>
-      /etc/nixos/hardware-configuration.nix
-    ];
-
-  boot.loader.grub.enable = false;
-  boot.loader.generic-extlinux-compatible.enable = true;
-
-
   users = {
     defaultUserShell = pkgs.zsh;
     users = us //  { autossh = {
@@ -53,7 +43,6 @@ in
     sudo.wheelNeedsPassword = false;
   };
 
-/*
   boot = {
     kernelPackages = pkgs.linuxPackages_rpi4;
     tmpOnTmpfs = true;
@@ -66,15 +55,10 @@ in
     ];
 
     loader = {
-      raspberryPi = {
-        enable = true;
-        version = 4;
-      };
       grub.enable = false;
       generic-extlinux-compatible.enable = true;
     };
   };
-*/
 
   fileSystems = {
     "/" = {
@@ -160,8 +144,9 @@ in
       neovim
       git
       python3
-      (haskellPackages.callPackage ./add-everyone/default.nix {})
+#      (haskellPackages.callPackage ./add-everyone/default.nix {})
       termite.terminfo
+      wol
     ];
 
     shellAliases = { vim = "nvim"; };
