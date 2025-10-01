@@ -74,7 +74,6 @@ in
 
   networking = {
     hostName = "pltc-pi";
-    extraHosts = "107.189.30.63 nixvps\n";
   };
 
   time.timeZone = "Europe/Copenhagen";
@@ -123,9 +122,9 @@ in
 
     autossh = {
       sessions = [
-        { extraArguments = "-N -R 9725:localhost:22 autossh@nixvps";
+        { extraArguments = "-N -R 9725:localhost:22 autossh@sigkill.dk";
           monitoringPort = 0;
-          name = "pltc-pi-nixvps";
+          name = "pltc-pi";
           user = "autossh";
         }
       ];
